@@ -26,24 +26,18 @@ app.post("/api/insert", (req, res) => {
 
     fs.readFile('file.txt', 'utf8', (err, data) => {
         if(data.length == 0){
-            console.log(data)
+            console.log("file is empty");
             var notes = [];
-            notes.push(note);
-            var fileContent = JSON.stringify(notes);
-            fs.writeFile('file.txt', fileContent, (err) => {
-                if(err) throw err;
-                console.log('done');
-            })
-        }
-        else{
+        }else{
             notes = JSON.parse(data);
-            notes.push(note);
-            var fileContent = JSON.stringify(notes);
-            fs.writeFile('file.txt', fileContent, (err) => {
-                if(err) throw err;
-                console.log('file saved');
-            })
+            console.log("file has some content");
         }
+        notes.push(note);
+        var fileContent = JSON.stringify(notes);
+        fs.writeFile('file.txt', fileContent, (err) => {
+            if(err) throw err;
+            console.log('file saved');
+        })
     })
 })
 
