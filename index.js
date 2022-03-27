@@ -1,3 +1,5 @@
+"use strict";
+
 const express = require('express');
 const app = express();
 const fs = require('fs');
@@ -25,12 +27,9 @@ app.post("/api/insert", (req, res) => {
    // })
 
     fs.readFile('file.txt', 'utf8', (err, data) => {
-        if(data.length == 0){
-            console.log("file is empty");
-            var notes = [];
-        }else{
+        var notes = [];
+        if(data.length !== 0){
             notes = JSON.parse(data);
-            console.log("file has some content");
         }
         notes.push(note);
         var fileContent = JSON.stringify(notes);
