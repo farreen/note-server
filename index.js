@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.post("/api/insert", (req, res) => {
     console.log(req.body)
     var obj = req.body;
-    var note = obj.value;
+    var note = obj;
     console.log(note);
    // fs.writeFile('file.txt', note, (err) => {
    //     if(err) throw err;
