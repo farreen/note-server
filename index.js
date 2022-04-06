@@ -40,6 +40,13 @@ app.post("/api/insert", (req, res) => {
     })
 })
 
+app.get("/api/list", (req, res) => {
+    fs.readFile('file.txt', 'utf8', (err, data) => {
+        res.send(data);
+        console.log('file read', data)
+    })
+})
+
 //app.get("/api/get",(req, res) => {
 //    fs.readFile('file.txt', 'utf8', (err, data) => {
 //        res.send(data)
