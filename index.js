@@ -5,14 +5,18 @@ const app = express();
 const fs = require('fs');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const {v4: uuid} = require('uuid');
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
 app.use(bodyParser.json());
 
 app.post("/api/insert", (req, res) => {
     console.log(req.body)
-    var obj = req.body;
-    var note = obj;
+    var note = {
+        id: uuid(),
+        title: req.body.title,
+        content: req.body.content
+    };
     console.log(note);
    // fs.writeFile('file.txt', note, (err) => {
    //     if(err) throw err;
