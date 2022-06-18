@@ -18,14 +18,14 @@ app.post("/api/insert", (req, res) => {
         content: req.body.content
     };
     console.log(note);
-    fs.readFile('file.txt', 'utf8', (err, data) => {
+    fs.readFile('notes.json', 'utf8', (err, data) => {
         var notes = [];
         if(data.length !== 0){
             notes = JSON.parse(data);
         }
         notes.push(note);
         var fileContent = JSON.stringify(notes);
-        fs.writeFile('file.txt', fileContent, (err) => {
+        fs.writeFile('notes.json', fileContent, (err) => {
             if(err){
                 res.status(500);  
                 res.send();    
@@ -39,7 +39,7 @@ app.post("/api/insert", (req, res) => {
 });
 
 app.get("/api/list", (req, res) => {
-    fs.readFile('file.txt', 'utf8', (err, data) => {
+    fs.readFile('notes.json', 'utf8', (err, data) => {
         if(err) {
             res.status(500);
             res.send();
@@ -58,7 +58,7 @@ app.get("/api/list", (req, res) => {
 
 app.put('/api/update', (req, res) => {
     const {id, title, content} = req.body;
-    fs.readFile('file.txt', 'utf8', (err, data) => {
+    fs.readFile('notes.json', 'utf8', (err, data) => {
         var notes = JSON.parse(data);
         console.log("file content", notes);
         for(const obj of notes) {
@@ -68,7 +68,7 @@ app.put('/api/update', (req, res) => {
                 obj.title = title;
                 obj.content = content;    
                 var newContent = JSON.stringify(notes);
-                fs.writeFile('file.txt', newContent, (err) => {
+                fs.writeFile('notes.json', newContent, (err) => {
                     if(err) {
                         res.status(500);
                         res.send();
