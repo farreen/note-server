@@ -24,14 +24,14 @@ app.post("/api/insert", (req, res) => {
             notes = JSON.parse(data);
         }
         notes.push(note);
-        var fileContent = JSON.stringify(notes);
+        var fileContent = JSON.stringify(notes, null, 4);
         fs.writeFile('notes.json', fileContent, (err) => {
             if(err){
                 res.status(500);  
                 res.send();    
             }else{
                 res.status(200);
-                res.send();  
+                res.send(note.id);  
                 console.log('file saved');
             }
         })
