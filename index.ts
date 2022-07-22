@@ -1,14 +1,17 @@
 "use strict";
 
 import express, { Request, Response } from "express";
+import fs from "fs";
+import cors from "cors";
+import bodyParser from "body-parser";
+import {v4 as uuid} from "uuid";
+
 const app = express();
-const fs = require('fs');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const {v4: uuid} = require('uuid');
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 app.use(bodyParser.json());
+
 type Note = {
     id: string;
     title: string;
@@ -23,7 +26,7 @@ app.post("/api/insert", (req: Request, res: Response) => {
        content: req.body.content
    };
    console.log(note);
-    fs.readFile('notes.json', 'utf8', (err: number, data: string) => {
+    fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
         if(err) return res.send(err);
         var notes = [];
         if(data.length !== 0){
@@ -31,7 +34,7 @@ app.post("/api/insert", (req: Request, res: Response) => {
         }
         notes.push(note);
         var fileContent = JSON.stringify(notes, null, 4);
-        fs.writeFile('notes.json', fileContent, (err: number) => {
+        fs.writeFile('notes.json', fileContent, (err: any) => {
             if(err){
                 res.status(500);  
                 res.send();    
@@ -45,7 +48,7 @@ app.post("/api/insert", (req: Request, res: Response) => {
 });
 
 app.get("/api/list", (req: Request, res: Response) => {
-    fs.readFile('notes.json', 'utf8', (err: number, data: Note[]) => {
+    fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
         if(err) {
             res.status(500);
             res.send("cannot list the items");
@@ -56,16 +59,9 @@ app.get("/api/list", (req: Request, res: Response) => {
     })
 });
 
-//app.get("/api/get",(req, res) => {
-//    fs.readFile('file.txt', 'utf8', (err, data) => {
-//        res.send(data)
-//        console.log('file read', data)
-//    })
-//});
-
 app.put('/api/update', (req, res) => {
     const {id, title, content} = req.body;
-    fs.readFile('notes.json', 'utf8', (err: number, data: string) => {
+    fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
         if(err) return res.send(err);
         var notes = JSON.parse(data);
         console.log("file content", notes);
@@ -76,7 +72,7 @@ app.put('/api/update', (req, res) => {
                 obj.title = title;
                 obj.content = content;    
                 var newContent = JSON.stringify(notes);
-                fs.writeFile('notes.json', newContent, (err: number) => {
+                fs.writeFile('notes.json', newContent, (err: any) => {
                     if(err) {
                         res.status(500);
                         res.send();
@@ -96,7 +92,7 @@ app.put('/api/update', (req, res) => {
 });
 
 app.delete('/api/deleteNote', (req, res) => {
-    fs.readFile('notes.json', 'utf8', (err: number, data: string) => {
+    fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
         if(err) return res.send(err);
         var notes:Note[] = JSON.parse(data);
         const id: string = req.body.id;
@@ -104,7 +100,7 @@ app.delete('/api/deleteNote', (req, res) => {
         let content = notes.filter((note) => note.id !== id )
         let newContent = JSON.stringify(content);
         console.log("newContent", newContent);
-        fs.writeFile("notes.json", newContent, (err: number) => {
+        fs.writeFile("notes.json", newContent, (err: any) => {
            if(err){
                res.status(500);
                res.send();
