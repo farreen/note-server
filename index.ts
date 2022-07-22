@@ -24,6 +24,7 @@ app.post("/api/insert", (req: Request, res: Response) => {
    };
    console.log(note);
     fs.readFile('notes.json', 'utf8', (err: number, data: string) => {
+        if(err) return res.send(err);
         var notes = [];
         if(data.length !== 0){
             notes = JSON.parse(data);
@@ -65,6 +66,7 @@ app.get("/api/list", (req: Request, res: Response) => {
 app.put('/api/update', (req, res) => {
     const {id, title, content} = req.body;
     fs.readFile('notes.json', 'utf8', (err: number, data: string) => {
+        if(err) return res.send(err);
         var notes = JSON.parse(data);
         console.log("file content", notes);
         for(const obj of notes) {
@@ -91,6 +93,27 @@ app.put('/api/update', (req, res) => {
         res.send();
         console.log('id not found');
     })
+});
+
+app.delete('/api/deleteNote', (req, res) => {
+    fs.readFile('notes.json', 'utf8', (err: number, data: string) => {
+        if(err) return res.send(err);
+        var notes:Note[] = JSON.parse(data);
+        const id: string = req.body.id;
+        console.log("id", id);
+        let content = notes.filter((note) => note.id !== id )
+        let newContent = JSON.stringify(content);
+        console.log("newContent", newContent);
+        fs.writeFile("notes.json", newContent, (err: number) => {
+           if(err){
+               res.status(500);
+               res.send();
+           }else{
+               res.status(200);
+               res.send();
+           }
+        });
+    });
 });
 
 app.listen(20959, () => {
