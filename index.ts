@@ -18,7 +18,7 @@ type Note = {
     content: string;
 };
 
-app.post("/api/insert", (req: Request, res: Response) => {
+app.post("/api/notes", (req: Request, res: Response) => {
    console.log(req.body);
    var note = {
        id: uuid(),
@@ -47,19 +47,18 @@ app.post("/api/insert", (req: Request, res: Response) => {
     })
 });
 
-app.get("/api/list", (req: Request, res: Response) => {
+app.get("/api/notes", (_req: Request, res: Response) => {
     fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
         if(err) {
             res.status(500);
             res.send("cannot list the items");
         }else{
             res.send(data);
-            //console.log(data)
         }
     })
 });
 
-app.put('/api/update', (req, res) => {
+app.put('/api/notes', (req, res) => {
     const {id, title, content} = req.body;
     fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
         if(err) return res.send(err);
@@ -71,7 +70,7 @@ app.put('/api/update', (req, res) => {
                 console.log('inside if block');
                 obj.title = title;
                 obj.content = content;    
-                var newContent = JSON.stringify(notes);
+                var newContent = JSON.stringify(notes, null, 4);
                 fs.writeFile('notes.json', newContent, (err: any) => {
                     if(err) {
                         res.status(500);
@@ -91,14 +90,14 @@ app.put('/api/update', (req, res) => {
     })
 });
 
-app.delete('/api/deleteNote', (req, res) => {
+app.delete('/api/notes/:id', (req, res) => {
     fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
         if(err) return res.send(err);
         var notes:Note[] = JSON.parse(data);
-        const id: string = req.body.id;
+        const id: string = req.params.id
         console.log("id", id);
         let content = notes.filter((note) => note.id !== id )
-        let newContent = JSON.stringify(content);
+        let newContent = JSON.stringify(content, null, 4);
         console.log("newContent", newContent);
         fs.writeFile("notes.json", newContent, (err: any) => {
            if(err){
