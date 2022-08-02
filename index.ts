@@ -19,32 +19,39 @@ type Note = {
 };
 
 app.post("/api/notes", (req: Request, res: Response) => {
-   console.log(req.body);
-   var note = {
-       id: uuid(),
-       title: req.body.title,
-       content: req.body.content
-   };
-   console.log(note);
-    fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
-        if(err) return res.send(err);
-        var notes = [];
-        if(data.length !== 0){
-            notes = JSON.parse(data);
-        }
-        notes.push(note);
-        var fileContent = JSON.stringify(notes, null, 4);
-        fs.writeFile('notes.json', fileContent, (err: any) => {
-            if(err){
-                res.status(500);  
-                res.send();    
-            }else{
-                res.status(200);
-                res.send(note.id);  
-                console.log('file saved');
+    console.log(req.body);
+    const title = req.body.title;
+    const content = req.body.content;
+    if(title.length <= 4 && content.length <= 4) {
+        res.status(400);
+        res.send("title and content should have atleast five character");
+    }else{
+        var note = {
+           id: uuid(),
+           title: req.body.title,
+           content: req.body.content
+        };
+        console.log(note);
+        fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
+            if(err) return res.send(err);
+            var notes = [];
+            if(data.length !== 0){
+                notes = JSON.parse(data);
             }
+            notes.push(note);
+            var fileContent = JSON.stringify(notes, null, 4);
+            fs.writeFile('notes.json', fileContent, (err: any) => {
+                if(err){
+                    res.status(500);
+                    res.send();
+                }else{
+                    res.status(200);
+                    res.send(note.id);
+                    console.log('file saved');
+                }
+            })
         })
-    })
+    }
 });
 
 app.get("/api/notes", (_req: Request, res: Response) => {
