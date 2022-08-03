@@ -22,7 +22,7 @@ app.post("/api/notes", (req: Request, res: Response) => {
     console.log(req.body);
     const title = req.body.title;
     const content = req.body.content;
-    if(title.length <= 4 && content.length <= 4) {
+    if(title.length === 0 || content.length === 0 || title.length <= 4 || content.length <= 4) {
         res.status(400);
         res.send("title and content should have atleast five character");
     }else{
