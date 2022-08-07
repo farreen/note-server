@@ -67,34 +67,42 @@ app.get("/api/notes", (_req: Request, res: Response) => {
 
 app.put('/api/notes', (req, res) => {
     const {id, title, content} = req.body;
-    fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
-        if(err) return res.send(err);
-        var notes = JSON.parse(data);
-        console.log("file content", notes);
-        for(const obj of notes) {
-            console.log('object', obj);
-            if(obj.id === id) {
-                console.log('inside if block');
-                obj.title = title;
-                obj.content = content;    
-                var newContent = JSON.stringify(notes, null, 4);
-                fs.writeFile('notes.json', newContent, (err: any) => {
-                    if(err) {
-                        res.status(500);
-                        res.send();
-                    }else{
-                        console.log('file updated');
-                        res.status(200);
-                        res.send();
-                    }
-                })
-                return;  
+    if(title.length === 0){
+        res.status(400)
+        res.send("title cannot be empty")
+    }else if(content.length === 0){
+        res.status(400)
+        res.send("content cannot be empty")
+    }else{
+        fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
+            if(err) return res.send(err);
+            var notes = JSON.parse(data);
+            console.log("file content", notes);
+            for(const obj of notes) {
+                console.log('object', obj);
+                if(obj.id === id) {
+                    console.log('inside if block');
+                    obj.title = title;
+                    obj.content = content;    
+                    var newContent = JSON.stringify(notes, null, 4);
+                    fs.writeFile('notes.json', newContent, (err: any) => {
+                        if(err) {
+                            res.status(500);
+                            res.send();
+                        }else{
+                            console.log('file updated');
+                            res.status(200);
+                            res.send();
+                        }
+                    })
+                    return;  
+                }
             }
-        }
-        res.status(404);
-        res.send();
-        console.log('id not found');
-    })
+            res.status(404);
+            res.send();
+            console.log('id not found');
+        })
+    }
 });
 
 app.delete('/api/notes/:id', (req, res) => {
