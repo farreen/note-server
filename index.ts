@@ -20,16 +20,16 @@ type Note = {
 
 app.post("/api/notes", (req: Request, res: Response) => {
     console.log(req.body);
-    const title = req.body.title;
-    const content = req.body.content;
-    if(title.length === 0 || content.length === 0 || title.length <= 4 || content.length <= 4) {
+    const { title, content, tags } = req.body;
+    if(title.length === 0 || content.length === 0 || title.length <= 4 || content.length <= 4 || tags.length == 0) {
         res.status(400);
         res.send("title and content should have atleast five character");
     }else{
         var note = {
            id: uuid(),
-           title: req.body.title,
-           content: req.body.content
+           title,
+           content,
+           tags,
         };
         console.log(note);
         fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
