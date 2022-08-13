@@ -30,6 +30,7 @@ app.post("/api/notes", (req: Request, res: Response) => {
            title,
            content,
            tags,
+           date: new Date().toISOString(), 
         };
         console.log(note);
         fs.readFile('notes.json', 'utf8', (err: any, data: string) => {
