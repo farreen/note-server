@@ -25,6 +25,14 @@ const readNotes = (_: Request, res: Response) => {
     .catch((err) => res.status(400).send(err))
 }
 
+const updateNotes = (req: Request, res: Response) => {
+    const {id, title, content} = req.body;
+    console.log("inside update", req.body);
+    NoteModel.findByIdAndUpdate(id, {title, content})
+    .then(() => res.status(200).send("updated succesfully"))
+    .catch((err) => console.log("err", err));
+}
 
-export default {readNotes, createNotes}
+
+export default {createNotes, readNotes, updateNotes}
 
