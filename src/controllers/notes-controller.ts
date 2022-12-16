@@ -33,6 +33,13 @@ const updateNotes = (req: Request, res: Response) => {
     .catch((err) => console.log("err", err));
 }
 
+const deleteNotes = (req: Request, res: Response) => {
+    let id: string = req.params.id;
+    console.log("inside delete", req.params.id)
+    NoteModel.findByIdAndDelete(id)
+    .then(() => res.status(200).send("deleted succesfully"))
+    .catch((err) => res.send(err))
+}
 
-export default {createNotes, readNotes, updateNotes}
+export default {createNotes, readNotes, updateNotes, deleteNotes}
 
